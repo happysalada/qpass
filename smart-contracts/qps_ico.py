@@ -1,17 +1,8 @@
-"""
-NEX ICO Template
-===================================
-
-Author: Thomas Saunders
-Email: tom@neonexchange.org
-
-Date: Dec 11 2017
-
-"""
 from nex.txio import get_asset_attachments
 from nex.token import *
 from nex.crowdsale import *
 from nex.nep5 import *
+from qpass import *
 from boa.interop.Neo.Runtime import GetTrigger, CheckWitness
 from boa.interop.Neo.TriggerType import Application, Verification
 from boa.interop.Neo.Storage import *
@@ -77,6 +68,9 @@ def Main(operation, args):
 
         elif operation == 'get_attachments':
             return get_asset_attachments()
+        
+        # qpass oparations
+
 
         return 'unknown operation'
 
