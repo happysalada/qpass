@@ -1,5 +1,5 @@
 """
-Basic settings for an NEP5 Token and crowdsale
+Basic settings for an NEP5 Token
 """
 
 from boa.interop.Neo.Storage import *
@@ -29,28 +29,7 @@ TOKENS_PER_GAS = 20 * 100000000
 # maximum amount you can mint in the limited round ( 500 neo/person * 40 Tokens/NEO * 10^8 )
 MAX_EXCHANGE_LIMITED_ROUND = 500 * 40 * 100000000
 
-# when to start the crowdsale
-BLOCK_SALE_START = 755000
-
-# when to end the initial limited round
-LIMITED_ROUND_END = 755000 + 10000
-
 KYC_KEY = b'kyc_ok'
-
-LIMITED_ROUND_KEY = b'r1'
-
-
-def crowdsale_available_amount(ctx):
-    """
-
-    :return: int The amount of tokens left for sale in the crowdsale
-    """
-
-    in_circ = Get(ctx, TOKEN_CIRC_KEY)
-
-    available = TOKEN_TOTAL_SUPPLY - in_circ
-
-    return available
 
 
 def add_to_circulation(ctx, amount):
