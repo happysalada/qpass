@@ -1,29 +1,18 @@
 <p align="center">
   <img
-    src="http://res.cloudinary.com/vidsy/image/upload/v1503160820/CoZ_Icon_DARKBLUE_200x178px_oq0gxm.png"
-    width="125px"
-    alt="City of Zion logo">
+    src="http://neonexchange.org/img/NEX-logo.svg"
+    width="125px;">
+
 </p>
+<h3 align="center">Qps ICO Smart Contract</h3>
+<p align="center">Quick pass token official ICO Smart Contract</p>
+<hr/>
 
-<h1 align="center">neo-local</h1>
+Based on [Neo ICO Template](https://github.com/neonexchange/neo-ico-template) by Thomas Saunders of the NEX team - a good [reference article](https://medium.com/proof-of-working/how-to-build-an-ico-on-neo-with-the-nex-ico-smart-contract-template-1beac1ff0afd)
 
-<p align="center">
-  Quickly setup a local environment for NEO smart contract development.
-</p>
+#### Requirements
 
-<p align="center">
-  <a href="https://travis-ci.org/CityOfZion/neo-local">
-    <img src="https://img.shields.io/travis/CityOfZion/neo-local/master.svg">
-  </a>
-</p>
-
-## What?
-
-Developing smart contracts for the NEO blockchain requires a local 
-[private network](https://hub.docker.com/r/cityofzion/neo-privatenet/) to be running. This project 
-sets this up for you, along with a number of other utility [services](#services) to help with development.
-
-![image](https://user-images.githubusercontent.com/2796074/36632958-9247f8ba-198d-11e8-8055-f096141902d9.png)
+Usage requires Python 3.6+
 
 ## Install
 
@@ -40,23 +29,40 @@ For Linux users, you will have two seperate things to install:
 1. [Docker Compose](https://docs.docker.com/compose/install/#install-compose)
 
 ## Usage
+#### deploy on your privatenet
+
+deploy a privatenet first
 
 MacOS or Linux users can make use of the **Makefile**:
 
 ```
 make start
 ```
+
+This will deploy a privatenet with a wallet with 100_000_000 NEO in a docker container
+To access the wallet
+`open wallet ./neo-privnet.wallet`
+Enter password `coz`
+
+To deploy the smart contract
+`build /smart-contracts/qps_ico.py test 07 05 True False deploy qps`
+
+Import the smart contract on your private net
+`import contract /smart-contracts/qps_ico.avm test 07 05 True False`
+
+Fill in the informations asked (name, email address...)
+
+look for the contract hash
+`contract search qps` (if you have named it qps)
+
+then deploy it
+`testinvoke 0x3fdc2dc4d26f98ab21b427270d284be9de70305b deploy []` (the hash value being the reference hash of your smart contract)
+
+test the amount of funds in circulation
+`testinvoke 0x3fdc2dc4d26f98ab21b427270d284be9de70305b circulation []`
+
 ```
 make stop
-```
-
-Windows users must run the **Docker commands manually**:
-
-```
-docker-compose up -d --build --remove-orphans
-```
-```
-docker exec -it neo-python np-prompt -p -v
 ```
 
 ## Block Explorer
@@ -76,25 +82,25 @@ services:
 
 ## Troubleshooting
 
-If you have an issue then please contact any of the 
-[contributors](https://github.com/CityOfZion/neo-local/graphs/contributors) on the 
+If you have an issue then please contact any of the
+[contributors](https://github.com/CityOfZion/neo-local/graphs/contributors) on the
 [NEO Discord](https://discord.cityofzion.io), or create an [issue](https://github.com/CityOfZion/neo-local/issues/new).
 
-The **Makefile** is designed to simplify the setup process, however in doing so it can 
-obscure debugging. Thus it is recommended to run the Docker commands manually if you encounter 
+The **Makefile** is designed to simplify the setup process, however in doing so it can
+obscure debugging. Thus it is recommended to run the Docker commands manually if you encounter
 an error (as outlined in [usage](#usage)).
 
 ## Credit
 
 [@slipo](https://github.com/slipo) used Docker Compose to create a simpler
-local development environment (see [repo](https://github.com/slipo/neo-scan-docker)). His work was built 
+local development environment (see [repo](https://github.com/slipo/neo-scan-docker)). His work was built
 upon by the [NeoAuth](https://github.com/neoauth) team, who simplified the idea
 further with the use of a wrapper and renamed the project.
 
-It has now moved to be a part of CoZ and is actively maintained by the team - see 
+It has now moved to be a part of CoZ and is actively maintained by the team - see
 [contributors](https://github.com/CityOfZion/neo-local/graphs/contributors).
 
-**Note** - this project sits on the shoulders of a number of great CoZ projects, and wouldn't be 
+**Note** - this project sits on the shoulders of a number of great CoZ projects, and wouldn't be
 possible without their hard work (see [services](#services)).
 
 ## License
