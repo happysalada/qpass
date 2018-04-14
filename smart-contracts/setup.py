@@ -73,7 +73,7 @@ setup(
     install_requires=['neo-boa',],
 
 
-    python_requires='>=3.4, <3.6',
+    python_requires='>=3.6',
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,

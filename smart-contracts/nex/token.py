@@ -4,9 +4,9 @@ Basic settings for an NEP5 Token and crowdsale
 
 from boa.interop.Neo.Storage import *
 
-TOKEN_NAME = 'NEX Template V2'
+TOKEN_NAME = 'Quick pass'
 
-TOKEN_SYMBOL = 'NXT2'
+TOKEN_SYMBOL = 'QPS'
 
 TOKEN_DECIMALS = 8
 
