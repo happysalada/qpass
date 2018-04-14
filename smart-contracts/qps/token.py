@@ -20,11 +20,9 @@ TOKEN_TOTAL_SUPPLY = 100000000 * 100000000  # 100m of Total Supply eg. 1B. QPS T
 TOKEN_INITIAL_AMOUNT = 25000000 * 100000000  # 25m contribute to the Lucky Guy (Owner)
 
 # we're accepting GAS in 1 usd per 1 qps
-TOKENS_PER_GAS = 20 * 100
+TOKENS_PER_GAS = 20 * 100000000
 
 
-# we're accepting GAS in 1 usd per 1 qps
-TOKENS_PER_NEO = 40 * 100
 
 
 def crowdsale_available_amount(ctx):
