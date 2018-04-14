@@ -1,5 +1,5 @@
 """
-Basic settings for an NEP5 Token and crowdsale
+Basic settings for an NEP5 Token
 """
 
 from boa.interop.Neo.Storage import *
@@ -12,8 +12,12 @@ TOKEN_DECIMALS = 8
 
 # This is the script hash of the address for the owner of the token
 # This can be found in ``neo-python`` with the walet open, use ``wallet`` command
+<<<<<<< HEAD
 #TOKEN_OWNER = b'S\xefB\xc8\xdf!^\xbeZ|z\xe8\x01\xcb\xc3\xac/\xacI)'
 TOKEN_OWNER = b'\x03\x6d\xbb\xbe\x94\xfb\x07\x33\x33\x8e\xd4\x1f\x28\x4f\x0e\xde\xad\x22\xf9\xb0\x30\xf9\x8a\x86\x37\xed\x84\x14\x0e\x0f\x63\xfe\xfa'
+=======
+TOKEN_OWNER = b'#\xba\'\x03\xc52c\xe8\xd6\xe5"\xdc2 39\xdc\xd8\xee\xe9'
+>>>>>>> 683be1f28dbac9b5d373abe1a4695067c7586ab8
 
 TOKEN_CIRC_KEY = b'in_circulation'
 
@@ -28,33 +32,6 @@ TOKENS_PER_NEO = 40 * 100000000
 
 # for now assume 1 dollar per token, and one gas = 20 dollars * 10^8
 TOKENS_PER_GAS = 20 * 100000000
-
-# maximum amount you can mint in the limited round ( 500 neo/person * 40 Tokens/NEO * 10^8 )
-MAX_EXCHANGE_LIMITED_ROUND = 500 * 40 * 100000000
-
-# when to start the crowdsale
-BLOCK_SALE_START = 755000
-
-# when to end the initial limited round
-LIMITED_ROUND_END = 755000 + 10000
-
-KYC_KEY = b'kyc_ok'
-
-LIMITED_ROUND_KEY = b'r1'
-
-
-def crowdsale_available_amount(ctx):
-    """
-
-    :return: int The amount of tokens left for sale in the crowdsale
-    """
-
-    in_circ = Get(ctx, TOKEN_CIRC_KEY)
-
-    available = TOKEN_TOTAL_SUPPLY - in_circ
-
-    return available
-
 
 def add_to_circulation(ctx, amount):
     """

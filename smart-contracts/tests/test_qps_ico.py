@@ -51,7 +51,7 @@ class TestContract(BoaFixtureTest):
 
     def test_ICOTemplate_1(self):
 
-        output = Compiler.instance().load('%s/ico_template.py' % TestContract.dirname).default
+        output = Compiler.instance().load('%s/qps_ico.py' % TestContract.dirname).default
         out = output.write()
 #        print(output.to_s())
 
@@ -75,11 +75,6 @@ class TestContract(BoaFixtureTest):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].GetString(), 'unknown operation')
 
-        # deploy with wallet 2 should fail CheckWitness
-        tx, results, total_ops, engine = TestBuild(out, ['deploy', '[]'], self.GetWallet2(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBoolean(), False)
-
         tx, results, total_ops, engine = TestBuild(out, ['deploy', '[]'], self.GetWallet1(), '0705', '05')
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].GetBoolean(), True)
@@ -101,7 +96,7 @@ class TestContract(BoaFixtureTest):
 
     def test_ICOTemplate_2(self):
 
-        output = Compiler.instance().load('%s/ico_template.py' % TestContract.dirname).default
+        output = Compiler.instance().load('%s/qps_ico.py' % TestContract.dirname).default
         out = output.write()
 
         # now transfer tokens to wallet 2
@@ -155,55 +150,9 @@ class TestContract(BoaFixtureTest):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].GetBoolean(), False)
 
-    def test_ICOTemplate_3_KYC(self):
-
-        output = Compiler.instance().load('%s/ico_template.py' % TestContract.dirname).default
-        out = output.write()
-        print(output.to_s())
-        # now transfer tokens to wallet 2
-
-        TestContract.dispatched_events = []
-
-        # test mint tokens without being kyc verified
-        tx, results, total_ops, engine = TestBuild(out, ['mintTokens', '[]', '--attach-neo=10'], self.GetWallet3(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBoolean(), False)
-
-        # Try to register as a non owner
-        tx, results, total_ops, engine = TestBuild(out, ['crowdsale_register', parse_param([self.wallet_3_script_hash.Data])], self.GetWallet3(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBoolean(), False)
-
-        # Get status of non registered address
-        tx, results, total_ops, engine = TestBuild(out, ['crowdsale_status', parse_param([self.wallet_3_script_hash.Data])], self.GetWallet3(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBoolean(), False)
-
-        TestContract.dispatched_events = []
-
-        # register an address
-        tx, results, total_ops, engine = TestBuild(out, ['crowdsale_register', parse_param([self.wallet_3_script_hash.Data])], self.GetWallet1(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBigInteger(), 1)
-
-        # it should dispatch an event
-        self.assertEqual(len(TestContract.dispatched_events), 1)
-        evt = TestContract.dispatched_events[0]
-        self.assertEqual(evt.event_payload[0], b'kyc_registration')
-
-        # register 2 addresses at once
-        tx, results, total_ops, engine = TestBuild(out, ['crowdsale_register', parse_param([self.wallet_3_script_hash.Data, self.wallet_2_script_hash.Data])], self.GetWallet1(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBigInteger(), 2)
-
-        # now check reg status
-        tx, results, total_ops, engine = TestBuild(out, ['crowdsale_status', parse_param([self.wallet_3_script_hash.Data])], self.GetWallet3(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBoolean(), True)
-
     def test_ICOTemplate_4_attachments(self):
 
-        output = Compiler.instance().load('%s/ico_template.py' % TestContract.dirname).default
+        output = Compiler.instance().load('%s/qps_ico.py' % TestContract.dirname).default
         out = output.write()
 
         # test mint tokens without being kyc verified
@@ -236,48 +185,9 @@ class TestContract(BoaFixtureTest):
         self.assertEqual(attachments[2].GetBigInteger(), Fixed8.FromDecimal(3).value)
         self.assertEqual(attachments[3].GetBigInteger(), Fixed8.FromDecimal(3.12).value)
 
-    def test_ICOTemplate_5_mint(self):
-
-        output = Compiler.instance().load('%s/ico_template.py' % TestContract.dirname).default
-        out = output.write()
-
-        # register an address
-        tx, results, total_ops, engine = TestBuild(out, ['crowdsale_register', parse_param([self.wallet_3_script_hash.Data])], self.GetWallet1(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBigInteger(), 1)
-
-        TestContract.dispatched_events = []
-
-        # test mint tokens, this should return true
-        tx, results, total_ops, engine = TestBuild(out, ['mintTokens', '[]', '--attach-neo=10'], self.GetWallet3(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBoolean(), True)
-
-        # it should dispatch an event
-        self.assertEqual(len(TestContract.dispatched_events), 1)
-        evt = TestContract.dispatched_events[0]
-        self.assertIsInstance(evt, NotifyEvent)
-        self.assertEqual(evt.amount, 10 * TOKENS_PER_NEO)
-        self.assertEqual(evt.addr_to, self.wallet_3_script_hash)
-
-        # test mint tokens again, this should be false since you can't do it twice
-        tx, results, total_ops, engine = TestBuild(out, ['mintTokens', '[]', '--attach-neo=10'], self.GetWallet3(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBoolean(), False)
-
-        # now the minter should have a balance
-        tx, results, total_ops, engine = TestBuild(out, ['balanceOf', parse_param([self.wallet_3_script_hash.Data])], self.GetWallet1(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBigInteger(), 10 * TOKENS_PER_NEO)
-
-        # now the total circulation should be bigger
-        tx, results, total_ops, engine = TestBuild(out, ['totalSupply', '[]'], self.GetWallet1(), '0705', '05')
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].GetBigInteger(), (10 * TOKENS_PER_NEO) + TOKEN_INITIAL_AMOUNT)
-
     def test_ICOTemplate_6_approval(self):
 
-        output = Compiler.instance().load('%s/ico_template.py' % TestContract.dirname).default
+        output = Compiler.instance().load('%s/qps_ico.py' % TestContract.dirname).default
         out = output.write()
 
         # tranfer_from, approve, allowance

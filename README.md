@@ -1,6 +1,6 @@
 <p align="center">
   <img
-    src="http://neonexchange.org/img/NEX-logo.svg"
+    src="./img/logo_qps.png"
     width="125px;">
 
 </p>

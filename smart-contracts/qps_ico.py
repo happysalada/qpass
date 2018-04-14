@@ -1,9 +1,12 @@
 
 from nex.txio import get_asset_attachments
 from nex.token import *
-from nex.crowdsale import *
 from nex.nep5 import *
+<<<<<<< HEAD
 from boa.interop.Neo.Runtime import GetTrigger, CheckWitness , Log
+=======
+from boa.interop.Neo.Runtime import GetTrigger, CheckWitness
+>>>>>>> 683be1f28dbac9b5d373abe1a4695067c7586ab8
 from boa.interop.Neo.TriggerType import Application, Verification
 from boa.interop.Neo.Storage import *
 
@@ -36,10 +39,7 @@ def Main(operation, args):
 
             return True
 
-        # Otherwise, we need to lookup the assets and determine
-        # If attachments of assets is ok
-        attachments = get_asset_attachments()
-        return can_exchange(ctx, attachments, True)
+        return False
 
     elif trigger == Application():
 
@@ -53,6 +53,7 @@ def Main(operation, args):
         elif operation == 'circulation':
             return get_circulation(ctx)
 
+<<<<<<< HEAD
         # the following are handled by crowdsale
 
         elif operation == 'mintTokens':
@@ -89,6 +90,13 @@ def Main(operation, args):
             k = args[1]
             return get_storage_item(type,k)
         
+=======
+        elif operation == 'get_attachments':
+            return get_asset_attachments()
+
+        # qpass operations
+
+>>>>>>> 683be1f28dbac9b5d373abe1a4695067c7586ab8
 
         return 'unknown operation'
 
