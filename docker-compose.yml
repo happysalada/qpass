@@ -1,0 +1,51 @@
+version: "3"
+services:
+  db:
+    container_name: "db"
+    image: postgres:10.1
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    expose:
+      - 5432
+  neo-nodes:
+    container_name: "neo-nodes"
+    image: cityofzion/neo-privatenet
+    ports:
+      - "20333:20333"
+      - "20334:20334"
+      - "20335:20335"
+      - "20336:20336"
+      - "30333:30333"
+      - "30334:30334"
+      - "30335:30335"
+      - "30336:30336"
+  neo-python:
+    container_name: "neo-python"
+    image: "cityofzion/neo-python"
+    depends_on:
+      - db
+      - neo-nodes
+      - neo-scan
+    network_mode: host
+    tty: true
+    volumes:
+      - ./smart-contracts:/smart-contracts
+  neo-scan:
+    build: ./neo-scan
+    container_name: "neo-scan"
+    depends_on:
+      - db
+      - neo-nodes
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOSTNAME: db
+    links:
+      - db
+      - neo-nodes:30333
+      - neo-nodes:30334
+      - neo-nodes:30335
+      - neo-nodes:30336
+    ports:
+      - 4000:4000   
