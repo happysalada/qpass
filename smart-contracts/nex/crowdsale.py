@@ -4,6 +4,7 @@ from boa.interop.Neo.Action import RegisterAction
 from boa.interop.Neo.Storage import Get, Put
 from boa.builtins import concat
 from nex.token import *
+
 from nex.txio import get_asset_attachments
 
 # OnInvalidKYCAddress = RegisterAction('invalid_registration', 'address')
@@ -63,24 +64,15 @@ def perform_exchange(ctx):
      :return:
          bool: Whether the exchange was successful
      """
-
     attachments = get_asset_attachments()  # [receiver, sender, neo, gas]
 
-    # this looks up whether the exchange can proceed
     exchange_ok = can_exchange(ctx, attachments, False)
 
     if not exchange_ok:
-        # This should only happen in the case that there are a lot of TX on the final
-        # block before the total amount is reached.  An amount of TX will get through
-        # the verification phase because the total amount cannot be updated during that phase
-        # because of this, there should be a process in place to manually refund tokens
         if attachments[2] > 0:
             OnRefund(attachments[1], attachments[2])
-        # if you want to exchange gas instead of neo, use this
-        # if attachments.gas_attached > 0:
-        #    OnRefund(attachments.sender_addr, attachments.gas_attached)
         return False
-
+    
     # lookup the current balance of the address
     current_balance = Get(ctx, attachments[1])
 

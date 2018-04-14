@@ -11,8 +11,9 @@ def get_asset_attachments():
     Gets information about Gas attached to an invocation TX
 
     :return:
-        list: A list with information about attached neo and gas
+        list: A list with information about attached gas
     """
+
     tx = GetScriptContainer()
     references = tx.References
 
@@ -26,6 +27,9 @@ def get_asset_attachments():
         sender_addr = reference.ScriptHash
         for output in tx.Outputs:
             if output.ScriptHash == receiver_addr:
+                #Only stick with GAS in this Hackathon
+                #if output.AssetId == neo_asset_id:
+                    #sent_amount_neo += output.Value
                 if output.AssetId == gas_asset_id:
                     sent_amount_gas += output.Value
 
