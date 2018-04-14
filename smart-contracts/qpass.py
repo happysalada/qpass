@@ -24,6 +24,11 @@ testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 register_provider ['AGzRsaa2
 
 #make a deposit
 
+#authorize 
+
+
+#release a deposit
+
 
 
 
@@ -99,44 +104,42 @@ def deploy():
 
     return False
 
-def register_smart_lock(address,ip_address,owner_name,room_name,price):
+def register_smart_lock(address,smart_lock_ip,owner_name,room_name,price):
     if not CheckWitness(address):
         Log("Owner argument is not the same as the sender")
         return False
     Log('Registering Smart LOCK')
-    Put(context, ip_address, address)
+    Put(context, smart_lock_ip, address)
 
-    key = concat(ip_address,'/price)
+    key = concat(smart_lock_ip,'/price)
     Put(context, key, price)
 
-    key = concat(ip_address,'/owner)
+    key = concat(smart_lock_ip,'/owner)
     Put(context, key, owner_name)
 
-    key = concat(ip_address,'/room)
+    key = concat(smart_lock_ip,'/room)
     Put(context, key, room_name)
 
     return True
 
-def make_deposit(address,ip_address,start_date,end_date):
+def make_deposit(address,smart_lock_ip,start_date,end_date):
     if not CheckWitness(address):
         return False
-    total_day_to_stay = (end_date)-(start_date)
-    price = Get(context,concat(ip_address, '/price'))
-    total_price = total_day_to_stay*price
-    key = concat('booking/',hex)
-    Put(context, key, total_price)
+    deposit = Get(context,concat(smart_lock_ip, '/deposit'))
+    if (deposit == 0):
+        Notify("Smart Lock still has a deposit")
+        return False
+    from_balance = Get(ctx, address)
+    price = Get(ctx, concat(smart_lock_ip, '/price'))
+    if from_balance < price:
+        print("Insufficient tokens for the deposit")
+        return False
+    balance = from_balance - price
+    Put(ctx, address, balance)
 
-    k = concat(key, '/device')
-    Put(context, k, device_id)
+    print("deposit complete")
 
-    k = concat(key, '/grant')
-    Put(context, k, address)
 
-    k = concat(key, '/start_date')
-    Put(context, k, start_date)
-
-    k = concat(key, '/end_date')
-    Put(context, k, end_date)
 
     return True
 
