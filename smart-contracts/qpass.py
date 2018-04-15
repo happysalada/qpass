@@ -152,6 +152,7 @@ def make_deposit(address,smart_lock_ip,start_date,end_date):
         return False
     balance = from_balance - price
     Put(context, address, balance)
+    Put(context,concat(smart_lock_ip, '/deposit'),price)
     Put(context,concat(smart_lock_ip, '/permission'),address)
 
 
@@ -187,7 +188,8 @@ def authorize_lock(address, smart_lock_ip):
         Notify("No Deposit has been found on this Smart LOCK")
         return False
     if address==authorized_address:
-        Notify("LOCK01/"+smart_lock_ip)
+        message = concat("LOCK01/",smart_lock_ip)
+        Notify(message)
         return True
     else:
         Notify("You have no permission!")
@@ -201,7 +203,8 @@ def authorize_unlock(address, smart_lock_ip):
         Notify("No Deposit has been found on this Smart LOCK")
         return False
     if address==authorized_address:
-        Notify("UNLOCK02/"+smart_lock_ip)
+        message = concat("UNLOCK02/",smart_lock_ip)
+        Notify(message)
         return True
     else:
         Notify("You have no permission!")
