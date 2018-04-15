@@ -45,10 +45,10 @@ To access the wallet
 Enter password `coz`
 
 To deploy the smart contract
-`build /smart-contracts/qps_ico.py test 07 05 True False deploy qps`
+`build /smart-contracts/qpass.py test 07 05 True False deploy qps`
 
 Import the smart contract on your private net
-`import contract /smart-contracts/qps_ico.avm test 07 05 True False`
+`import contract /smart-contracts/qpass.avm test 07 05 True False`
 
 Fill in the informations asked (name, email address...)
 
@@ -56,7 +56,7 @@ look for the contract hash
 `contract search qps` (if you have named it qps)
 
 then deploy it
-`testinvoke 0x3fdc2dc4d26f98ab21b427270d284be9de70305b deploy []` (the hash value being the reference hash of your smart contract)
+`testinvoke 0x4765e8b5f7d4bc00cfad25139f6e5f5f10adff0b deploy []` (the hash value being the reference hash of your smart contract)
 
 test the amount of funds in circulation
 `testinvoke 0x3fdc2dc4d26f98ab21b427270d284be9de70305b circulation []`

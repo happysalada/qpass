@@ -15,29 +15,24 @@ NEP5_METHODS = ['name', 'symbol', 'decimals', 'totalSupply', 'balanceOf', 'trans
 testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 deploy []
 
 #inspect circulation
-testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 circulations []
+testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 circulation []
 
 #mint QPS tokens (accepting only GAS)
 testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 mintTokens [] --attach-gas=10
 import token 3f50d55c3a4e31288bc200ca6663701744996908
 
 #register a smart lock
-testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 register_provider ['AGzRsaa21AP14YNpJ6feyhZscrjHGtbKxn','192.168.1.1','owner_name','property_name','2000'] 
+testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 register_smart_lock ['AGzRsaa21AP14YNpJ6feyhZscrjHGtbKxn','192.168.1.1','owner_name','property_name','2000']
 
 #make a deposit
 testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 make_deposit ['AR8jfZDgdCbGattRN2JDWQFeurrkAiJnHZ','192.168.0.1','1','2']
-
 
 #authorization to the Smart LOCK
 testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 authorize_lock ['AR8jfZDgdCbGattRN2JDWQFeurrkAiJnHZ','192.168.0.1']
 testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 authorize_unlock ['AR8jfZDgdCbGattRN2JDWQFeurrkAiJnHZ','192.168.0.1']
 
-
-
 #release a deposit
 testinvoke 3f50d55c3a4e31288bc200ca6663701744996908 release_deposit ['AR8jfZDgdCbGattRN2JDWQFeurrkAiJnHZ','192.168.0.1','1','2']
-
-
 
 """
 
@@ -59,7 +54,7 @@ def Main(operation, args):
         if is_owner:
 
             return True
-        
+
         return False
     elif trigger == Application():
         for op in NEP5_METHODS:
@@ -99,10 +94,10 @@ def Main(operation, args):
             address = args[0]
             device_id = args[1]
             return release_deposit(address,device_id)
-            
+
         return 'unknown operation'
     return False
-        
+
 
 def deploy():
     """
@@ -211,7 +206,7 @@ def authorize_unlock(address, smart_lock_ip):
     else:
         Notify("You have no permission!")
         return False
-    
+
 
 """
 def register_provider(address,provider_name):
